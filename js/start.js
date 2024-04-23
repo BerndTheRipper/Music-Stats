@@ -42,27 +42,26 @@ async function extendedSelectorClicked(e) {
 
 		let entriesObject = JSON.parse(await file.text());
 
-		let statsObtained = getPartialStats(entriesObject);
+		let statsObtained = getPartialStats(entriesObject, true);
 		calculations.addInHere(statsObtained);
 	}
 
+	let totalStreams = 0;
+
+	for (let deviceStreams of Object.values(calculations["devicesUsed"])) {
+		if (typeof deviceStreams != "number") continue;
+		totalStreams += deviceStreams;
+	}
+
+	let newAddition = {
+		"devicesUsedShare": {}
+	};
+
+	for (let [deviceName, deviceAmount] of Object.entries(calculations["devicesUsed"])) {
+		newAddition["devicesUsedShare"][deviceName] = deviceAmount / totalStreams;
+	}
+
+	calculations.addInHere(newAddition);
+
 	console.log(calculations);
 }
-
-// function enterRecursively(stuffToAdd, this) {
-// 	for (let [key, value] of Object.entries(stuffToAdd)) {
-// 		if (typeof value == "object") {
-// 			if (!this[key]) {
-// 				this[key] = {}
-// 			}
-// 			enterRecursively(value, this[key]);
-// 		}
-// 		else if (typeof value == "number") {
-// 			if (!this[key]) {
-// 				this[key] = value;
-// 				continue;
-// 			}
-// 			this[key] += value;
-// 		}
-// 	}
-// }

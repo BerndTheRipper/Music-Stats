@@ -2,6 +2,9 @@ const platformStarts = [
 	"Windows 7",
 	"Windows 10",
 	"iOS",
+	"Android OS",
+	"Android-tablet",
+	"web_player android",
 	"web_player linux",
 	"web_player windows 7;chrome",
 	"web_player windows 10;chrome",
@@ -12,7 +15,9 @@ const platformStarts = [
 
 function getStats(listoflists, summarizeBrowsers = true) {
 	let devicesUsed = {};
+	let totalStreams = 0;
 	for (list of listoflists) {
+		totalStreams += list.length;
 		for (entry of list) {
 			let platformToList = entry.platform;
 
@@ -32,7 +37,15 @@ function getStats(listoflists, summarizeBrowsers = true) {
 			devicesUsed[platformToList]++;
 		}
 	}
+	console.log(totalStreams);
+
 	let output = { "devicesUsed": devicesUsed };
+
+	// output["devicesUsedShare"] = {};
+	// for (let [deviceType, amount] of Object.entries(output["devicesUsed"])) {
+	// 	output["devicesUsedShare"][deviceType] = amount / totalStreams;
+	// }
+
 	return output;
 }
 
