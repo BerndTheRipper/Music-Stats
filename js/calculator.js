@@ -1,3 +1,7 @@
+/**
+ * @deprecated This process is being moved to the dataProcessors folder
+ */
+
 const platformStarts = [
 	"Windows 7",
 	"Windows 10",

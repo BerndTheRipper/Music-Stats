@@ -1,9 +1,35 @@
+import DeviceShare from "./dataProcessors/deviceShare.js"
+
+var dataFolder;
+var currentChart;
+
+//TODO use this to generate a list in the control panel
+const optionsIfAvailable = {
+	"standard": [/* currently none */],
+	"extended": ["deviceShare"],
+	"technical": [/* currently none */]
+};
+
 window.addEventListener("load", () => {
-	let extendedSelector = document.querySelector("#extendedSelector");
-	extendedSelector.addEventListener("click", extendedSelectorClicked);
+	let dataSelector = document.querySelector("#dataSelector");
+	dataSelector.addEventListener("click", dataSelectorClicked);
+
+	let diagramChooser = document.querySelector("#diagramChooser");
+	diagramChooser.addEventListener("change", requestNewDiagram);
+
+	currentChart = new Chart(document.querySelector("#chartCanvas"));
 });
 
-async function extendedSelectorClicked(e) {
+async function requestNewDiagram(e) {
+	if (!e.isTrusted) {
+		throw new DOMException("Why is this not trusted?");
+	}
+
+	console.log(e);
+	console.log(dataFolder);
+}
+
+async function dataSelectorClicked(e) {
 	let folder;
 	try {
 		folder = await window.showDirectoryPicker();
@@ -15,6 +41,8 @@ async function extendedSelectorClicked(e) {
 			return;
 		}
 	}
+
+	dataFolder = folder;
 
 	let calculations = {
 		addInHere: function (stuffToAdd) {
