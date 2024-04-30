@@ -60,13 +60,7 @@ export default class DeviceShare extends Processor {
 		let output = {};
 		let totalStreams = dataObject.length;
 		for (let entry of dataObject) {
-			let platformToList = "Other";
-
-			for (let starter of this.platformStarts) {
-				if (!entry.platform.startsWith(starter)) continue;
-				platformToList = starter;
-				break;
-			}
+			let platformToList = entry.platform;
 
 			if (!output[platformToList]) {
 				output[platformToList] = 1;
@@ -78,9 +72,6 @@ export default class DeviceShare extends Processor {
 		return output;
 	}
 
-	/**
-	 * @todo move summarizing platforms here
-	 */
 	cleanupData() {
 		if (this.platformStarts.length != this.platformLabels.length) {
 			throw new Error("Platform starts and platform labels must be the same lengths.");
@@ -88,10 +79,17 @@ export default class DeviceShare extends Processor {
 
 		delete this.statsToShow.addData;
 
-		for (let i in this.platformLabels) {
-			if (this.platformStarts[i] == this.platformLabels[i]) continue;
-			this.statsToShow[this.platformLabels[i]] = this.statsToShow[this.platformStarts[i]];
-			delete this.statsToShow[this.platformStarts[i]];
+		for (let key of Object.keys(this.statsToShow)) {
+			let statsSection = "Other";
+			for (let i in this.platformStarts) {
+				if (!key.startsWith(this.platformStarts[i])) continue;
+				statsSection = this.platformLabels[i];
+				break;
+			}
+
+			if (!this.statsToShow[statsSection]) this.statsToShow[statsSection] = 0;
+			this.statsToShow[statsSection] += this.statsToShow[key];
+			delete this.statsToShow[key];
 		}
 	}
 
