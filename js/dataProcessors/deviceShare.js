@@ -5,7 +5,6 @@ import Processor from "./processor.js"
  * @hideconstructor
  * @classdesc Draws a pie chart that shows the share of devices that I streamed from over a global lifespan
  * @extends Processor
- * @todo figure out how to solve this issue with the await not being available in the constructor, maybe make the constructor static
  */
 export default class DeviceShare extends Processor {
 	platformStarts = [
