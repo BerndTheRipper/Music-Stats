@@ -1,5 +1,6 @@
 import DeviceShare from "./dataProcessors/deviceShare.js"
 import ListeningClock from "./dataProcessors/listeningClock.js";
+import TopList from "./dataProcessors/topList.js";
 
 var dataFolder;
 var currentChart;
@@ -8,13 +9,14 @@ var currentProcessor;
 //TODO use this to generate a list in the control panel
 const optionsIfAvailable = {
 	"standard": [/* currently none */],
-	"extended": ["deviceShare", "listeningClock"],
+	"extended": ["deviceShare", "listeningClock", "topArtists"],
 	"technical": [/* currently none */]
 };
 
 const diagramClasses = {
 	"deviceShare": DeviceShare,
-	"listeningClock": ListeningClock
+	"listeningClock": ListeningClock,
+	"topList": TopList
 };
 
 window.addEventListener("load", () => {
