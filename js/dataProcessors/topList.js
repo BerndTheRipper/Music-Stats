@@ -1,11 +1,13 @@
 import Processor from "./processor.js";
 
 export default class TopList extends Processor {
-	//Possible values: artists, tracks
+	//Possible values: album_artist, tracks
 	//Currently supported: neither
-	#whatToGet = "artists";
+	#whatToGet = "artist";
+	data = {};
 
 	//If these two are unset the start and end time can be anything
+	//startingtime <= time < endingTime
 	#startingTime = null;
 	#endingTime = null;
 
@@ -46,7 +48,27 @@ export default class TopList extends Processor {
 	}
 
 	readStats(dataObject) {
+		let timestampToUse = dataObject["ts"];
+		let keyString = "master_metadata_" + this.whatToGet + "_name";
+		if (dataObject["offline"]) {
+			timestampToUse = dataObject["offline_timestamp"];
+		}
 
+		let dateObject = new Date(timestampToUse);
+
+		if (this.#startingTime != null && dateObject.getTime() < this.#startingTime.getTime()) {
+			return;
+		}
+
+		if (this.#endingTime != null && dateObject.getTime() >= this.#endingTime.getTime()) {
+			return;
+		}
+
+		if (!data[dataObject[keyString]]) {
+			data[dataObject[keyString]] = 1;
+			return;
+		}
+		data[dataObject[keyString]] += 1;
 	}
 
 	cleanupData() {
