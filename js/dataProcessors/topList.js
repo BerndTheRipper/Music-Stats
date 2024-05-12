@@ -64,11 +64,11 @@ export default class TopList extends Processor {
 			return;
 		}
 
-		if (!data[dataObject[keyString]]) {
-			data[dataObject[keyString]] = 1;
+		if (!this.data[dataObject[keyString]]) {
+			this.data[dataObject[keyString]] = 1;
 			return;
 		}
-		data[dataObject[keyString]] += 1;
+		this.data[dataObject[keyString]] += 1;
 	}
 
 	cleanupData() {
