@@ -3,7 +3,10 @@ import Processor from "./processor.js";
 export default class TopList extends Processor {
 	//Possible values: album_artist, tracks
 	//Currently supported: neither
-	#whatToGet = "artist";
+	#whatToGet = "album_artist";
+	#howMany = 10;
+	//Within the top #howMany, this list is sorted, after that it is not
+	#topList = [];
 	data = {};
 
 	//If these two are unset the start and end time can be anything
@@ -48,31 +51,57 @@ export default class TopList extends Processor {
 	}
 
 	readStats(dataObject) {
-		let timestampToUse = dataObject["ts"];
-		let keyString = "master_metadata_" + this.whatToGet + "_name";
-		if (dataObject["offline"]) {
-			timestampToUse = dataObject["offline_timestamp"];
-		}
+		for (let entry of dataObject) {
+			let timestampToUse = entry["ts"];
+			let keyString = "master_metadata_" + this.whatToGet + "_name";
+			if (entry["offline"]) {
+				timestampToUse = entry["offline_timestamp"];
+			}
 
-		let dateObject = new Date(timestampToUse);
+			let dateObject = new Date(timestampToUse);
 
-		if (this.#startingTime != null && dateObject.getTime() < this.#startingTime.getTime()) {
-			return;
-		}
+			if (this.#startingTime != null && dateObject.getTime() < this.#startingTime.getTime()) {
+				continue;
+			}
 
-		if (this.#endingTime != null && dateObject.getTime() >= this.#endingTime.getTime()) {
-			return;
-		}
+			if (this.#endingTime != null && dateObject.getTime() >= this.#endingTime.getTime()) {
+				continue;
+			}
 
-		if (!this.data[dataObject[keyString]]) {
-			this.data[dataObject[keyString]] = 1;
-			return;
+			if (!this.data[entry[keyString]]) {
+				this.data[entry[keyString]] = 1;
+				continue;
+			}
+			this.data[entry[keyString]] += 1;
 		}
-		this.data[dataObject[keyString]] += 1;
 	}
 
+	//TODO fix this
 	cleanupData() {
+		let keys = Object.keys(this.data);
+		let values = Object.values(this.data);
+		this.#topList[0] = keys[0];
 
+		for (let i = 1; i < keys.length; i++) {
+			for (let k = 0; k < keys.length && k < this.#howMany; k++) {
+				if (this.#topList[k] == null) {
+					this.#topList[k] = keys[i];
+					continue;
+				}
+				if (values[i] <= values[this.#topList[k]]) continue;
+				this.#topList[this.#howMany - 1] = keys[i];
+				for (let j = this.#howMany - 1; j > k; j--) {
+					let temp = this.#topList[j - 1];
+					this.#topList[j - 1] = this.#topList[j];
+					this.#topList[j] = temp;
+				}
+			}
+		}
+
+		for (let key of this.#topList) {
+			this.statsToShow[key] = this.data[key];
+		}
+		return;
 	}
 
 	setUpChart() {
