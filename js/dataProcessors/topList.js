@@ -76,7 +76,6 @@ export default class TopList extends Processor {
 		}
 	}
 
-	//TODO fix this
 	cleanupData() {
 		let keys = Object.keys(this.data);
 		let values = Object.values(this.data);
@@ -88,20 +87,20 @@ export default class TopList extends Processor {
 					this.#topList[k] = keys[i];
 					continue;
 				}
-				if (values[i] <= values[this.#topList[k]]) continue;
+				if (values[i] <= this.data[this.#topList[k]]) continue;
 				this.#topList[this.#howMany - 1] = keys[i];
 				for (let j = this.#howMany - 1; j > k; j--) {
 					let temp = this.#topList[j - 1];
 					this.#topList[j - 1] = this.#topList[j];
 					this.#topList[j] = temp;
 				}
+				break;
 			}
 		}
 
 		for (let key of this.#topList) {
 			this.statsToShow[key] = this.data[key];
 		}
-		return;
 	}
 
 	setUpChart() {
