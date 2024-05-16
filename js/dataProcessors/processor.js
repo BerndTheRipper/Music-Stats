@@ -13,6 +13,10 @@ export default class Processor {
 	 */
 	chart;
 	/**
+	 * If the stats should not be shown as a chart, they can be put in this div instead
+	 */
+	dataDiv;
+	/**
 	 * The folder handle of the folder that contains the necessary files
 	 */
 	neededFolderHandle;
@@ -91,9 +95,11 @@ export default class Processor {
 	 * @param {Chart} chart The chart that should be drawn into
 	 * @param {FileSystemDirectoryHandle} folder The folder to read the data from
 	 * @param {string} neededFolder The name of the data folder that we need
+	 * @param {null} [dataDiv=null] The div that will cotain further information on the stats, or maybe even the stats themselves
+	 * @param {boolean} [showChart=true] Whether or not a chart should be shown
 	 * @throws {TypeError} if one of the parameters has an incorrect type
 	 */
-	static async createProcessor(chart, folder, neededFolder) {
+	static async createProcessor(chart, folder, neededFolder, dataDiv = null, showChart = true) {
 		if (!(chart instanceof Chart)) {
 			throw new TypeError("Chart parameter needs to be of type Chart (duh)");
 		}
@@ -104,6 +110,9 @@ export default class Processor {
 
 		if (typeof neededFolder != "string") {
 			throw new TypeError("neededFolder needs to be of type string");
+		}
+		if (dataDiv != null && !(dataDiv instanceof Element)) {
+			throw new TypeError("If you want to give a dataDiv, it needs to be an Element.");
 		}
 
 		Processor.#initializing = true;
@@ -126,6 +135,17 @@ export default class Processor {
 			throw new ReferenceError("Could not find the needed folder")
 		}
 		output.clearChartConfig();
+
+		if (showChart) {
+			chart.canvas.style.display = "block";
+		} else {
+			chart.canvas.style.display = "none";
+		}
+
+		if (dataDiv != null) {
+			dataDiv.innerHTML = "";
+			output.dataDiv = dataDiv;
+		}
 
 		return output;
 	}

@@ -1,3 +1,4 @@
+import DataUtils from "../dataUtils.js";
 import Processor from "./processor.js";
 
 export default class TopList extends Processor {
@@ -35,9 +36,6 @@ export default class TopList extends Processor {
 	}
 
 	async readFiles() {
-		for (let i = 0; i < 24; i++) {
-			this.statsToShow[i] = 0;
-		}
 		for await (const fileHandle of this.neededFolderHandle.values()) {
 			if (!fileHandle.name.startsWith("endsong_")) continue;
 			let file = await fileHandle.getFile();
@@ -104,15 +102,21 @@ export default class TopList extends Processor {
 	}
 
 	setUpChart() {
-
+		let stringArray = [];
+		delete this.statsToShow.addData;
+		for (let [key, value] of Object.entries(this.statsToShow)) {
+			stringArray.push(key + ": " + value);
+		}
+		this.dataDiv.appendChild(DataUtils.arrayToElement(stringArray, "ol", "ul"));
 	}
 
 	/**
 	 * @param {Chart} chart A pre-initialized chart object
 	 * @param {FileSystemDirectoryHandle} folder The folder at the root of myData
+	 * @todo obtain dataDiv through parameter
 	 */
 	static async createProcessor(chart, folder) {
-		let output = await super.createProcessor(chart, folder, "extended");
+		let output = await super.createProcessor(chart, folder, "extended", document.querySelector("#dataDiv"));
 
 		return output;
 	}
