@@ -108,10 +108,13 @@ export default class DeviceShare extends Processor {
 	}
 
 	/**
+	 * Creates the processor
 	 * @param {Chart} chart A pre-initialized chart object
 	 * @param {FileSystemDirectoryHandle} folder The folder at the root of myData
+	 * @throws {TypeError} if one of the parameters has an incorrect type
 	 */
 	static async createProcessor(chart, folder) {
+		//Type validation is done in this function already
 		let output = await super.createProcessor(chart, folder, "extended");
 
 		return output;

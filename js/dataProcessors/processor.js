@@ -65,6 +65,7 @@ export default class Processor {
 	/**
 	 * @abstract
 	 * reads the needed stats from the object provided
+	 * @param {*} dataObject The object to be rad from. Objects are specified by descendents
 	 */
 	readStats(dataObject) { }
 

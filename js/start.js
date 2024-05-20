@@ -29,7 +29,15 @@ window.addEventListener("load", () => {
 	currentChart = new Chart(document.querySelector("#chartCanvas"));
 });
 
+/**
+ * Handles a new diagram being requested. This usually gets triggered when a new statistic is set to be shown 
+ * @param {Event} e The event info from the submit event
+ * @throws {TypeError} If e is not an event of type change
+ */
 async function requestNewDiagram(e) {
+	if (!(e instanceof Event) || e.type != "change") {
+		throw new TypeError("e needs to be a change event");
+	}
 	if (!e.isTrusted) {
 		console.warn("requestNewDiagram dispatch not trusted.");
 	}
@@ -43,7 +51,15 @@ async function requestNewDiagram(e) {
 	console.log(dataFolder);
 }
 
+/**
+ * When the button to select the data was clicked.
+ * @param {PointerEvent} e The information about the event that was dispatched
+ * @throws {TypeError} If e is not a PointerEvent of type click
+ */
 async function dataSelectorClicked(e) {
+	if (!(e instanceof PointerEvent) || e.type != "click") {
+		throw new TypeError("e needs to be a change event");
+	}
 	try {
 		dataFolder = await window.showDirectoryPicker();
 		e.target.style.backgroundColor = "#0F0";

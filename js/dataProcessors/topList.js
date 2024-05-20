@@ -1,6 +1,15 @@
 import DataUtils from "../dataUtils.js";
 import Processor from "./processor.js";
 
+/**
+ * @class
+ * @hideconstructor
+ * @classdesc Displays a list of the top n of either listened to artists or tracks by amount of streams within a given amount of time
+ * @extends Processor
+ * @todo Make it actually work
+ * @todo add fuse against requesting more entries than there is data
+ * @todo maybe add by listening time
+ */
 export default class TopList extends Processor {
 	//Possible values: album_artist, tracks
 	//Currently supported: neither
@@ -15,10 +24,18 @@ export default class TopList extends Processor {
 	#startingTime = null;
 	#endingTime = null;
 
+	/**
+	 * what to get, whether the top artists or tracks should be obtained
+	 * @returns {string} What should be gotten
+	 */
 	get whatToGet() {
 		return this.#whatToGet;
 	}
 
+	/**
+	 * Sets what to get, either top artists or tracks
+	 * @todo add validation
+	 */
 	set whatToGet(value) {
 		this.#whatToGet = value;
 	}
@@ -26,6 +43,7 @@ export default class TopList extends Processor {
 	constructor() {
 		super();
 	}
+
 
 	async drawChart() {
 		await this.readFiles();
@@ -111,11 +129,14 @@ export default class TopList extends Processor {
 	}
 
 	/**
+	 * Creates the processor
 	 * @param {Chart} chart A pre-initialized chart object
 	 * @param {FileSystemDirectoryHandle} folder The folder at the root of myData
+	 * @throws {TypeError} if one of the parameters has an incorrect type
 	 * @todo obtain dataDiv through parameter
 	 */
 	static async createProcessor(chart, folder) {
+		//Type validation is done in this function already
 		let output = await super.createProcessor(chart, folder, "extended", document.querySelector("#dataDiv"));
 
 		return output;
