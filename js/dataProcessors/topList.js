@@ -125,7 +125,7 @@ export default class TopList extends Processor {
 		for (let [key, value] of Object.entries(this.statsToShow)) {
 			stringArray.push(key + ": " + value);
 		}
-		this.dataDiv.appendChild(DataUtils.arrayToElement(stringArray, "ol", "ul"));
+		this.dataDiv.appendChild(DataUtils.arrayToElement(stringArray, "ol", "li"));
 	}
 
 	/**
