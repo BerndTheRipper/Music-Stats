@@ -1,6 +1,5 @@
 /**
  * Some static utilities for drawing data to the frontend that is not the canvas
- * @todo fix list not showing proper numbering
  */
 export default class DataUtils {
 	/**
@@ -12,7 +11,7 @@ export default class DataUtils {
 	 * @throws {TypeError} When an incorrect type was provided
 	 */
 	static arrayToElement(list, parent = "ol", children = "li") {
-		if (list instanceof Array) {
+		if (!(list instanceof Array)) {
 			throw new TypeError("list must be an array.");
 		}
 		if (typeof parent != "string") {
