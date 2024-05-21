@@ -128,6 +128,17 @@ export default class TopList extends Processor {
 		this.dataDiv.appendChild(DataUtils.arrayToElement(stringArray, "ol", "li"));
 	}
 
+	getElementsForEventHandlers() {
+		let output = {
+			"click": [this.dataDiv],
+		}
+		return output;
+	}
+
+	eventHandler(e) {
+		return;
+	}
+
 	/**
 	 * Creates the processor
 	 * @param {Chart} chart A pre-initialized chart object

@@ -92,6 +92,21 @@ export default class Processor {
 	}
 
 	/**
+	 * currently referenced in [TopList]
+	 * @todo properly standardize
+	 * @returns 
+	 */
+	getElementsForEventHandlers() {
+		return {};
+	}
+
+	/**
+	 * 
+	 * @param {*} e 
+	 * @todo properly document, type verification
+	 */
+	eventHandler(e) { }
+	/**
 	 * Creates a new processor. This constructor makes type validations and 
 	 * @param {Chart} chart The chart that should be drawn into
 	 * @param {FileSystemDirectoryHandle} folder The folder to read the data from

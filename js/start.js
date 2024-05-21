@@ -47,6 +47,15 @@ async function requestNewDiagram(e) {
 	currentProcessor = await diagramClass.createProcessor(currentChart, dataFolder);
 	await currentProcessor.drawChart();
 
+	let eventHandlingNeeders = currentProcessor.getElementsForEventHandlers();
+
+	//TODO add type validation that each value is an array and each array entry is an element
+	for (let eventType of Object.keys(eventHandlingNeeders)) {
+		for (let element of eventHandlingNeeders[eventType]) {
+			element.addEventListener(eventType, eventPasser);
+		}
+	}
+
 	console.log(e);
 	console.log(dataFolder);
 }
@@ -72,4 +81,8 @@ async function dataSelectorClicked(e) {
 	let diagramChooser = document.querySelector("#diagramChooser");
 	let changeEvent = new Event("change");
 	diagramChooser.dispatchEvent(changeEvent);
+}
+
+function eventPasser(e) {
+	currentProcessor.eventHandler(e);
 }
