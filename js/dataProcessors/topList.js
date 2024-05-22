@@ -67,6 +67,7 @@ export default class TopList extends Processor {
 	}
 
 	readStats(dataObject) {
+		this.data = {};
 		for (let entry of dataObject) {
 			let timestampToUse = entry["ts"];
 			let keyString = "master_metadata_" + this.whatToGet + "_name";
@@ -95,6 +96,7 @@ export default class TopList extends Processor {
 	cleanupData() {
 		let keys = Object.keys(this.data);
 		let values = Object.values(this.data);
+		this.#topList = [];
 		this.#topList[0] = keys[0];
 
 		for (let i = 1; i < keys.length; i++) {
@@ -121,21 +123,24 @@ export default class TopList extends Processor {
 
 	setUpChart() {
 		let stringArray = [];
-		delete this.statsToShow.addData;
+		//TODO make this adapt to this.#howMany
+		let ol = this.dataDiv.querySelector("ol");
+		if (ol != null) {
+			this.dataDiv.removeChild(ol);
+		}
 		for (let [key, value] of Object.entries(this.statsToShow)) {
 			stringArray.push(key + ": " + value);
 		}
 		this.dataDiv.appendChild(DataUtils.arrayToElement(stringArray, "ol", "li"));
 	}
 
-	getElementsForEventHandlers() {
-		let output = {
-			"click": [this.dataDiv],
-		}
-		return output;
-	}
-
+	//Currently only gets called for a new amount on the top list
 	eventHandler(e) {
+		if (e.type != "change") throw new Error("Unexpected event.");
+
+		let newAmount = e.target.value;
+		this.#howMany = parseInt(newAmount);
+		this.drawChart();
 		return;
 	}
 
@@ -148,8 +153,20 @@ export default class TopList extends Processor {
 	 */
 	static async createProcessor(chart, folder) {
 		//Type validation is done in this function already
-		let output = await super.createProcessor(chart, folder, "extended", document.querySelector("#dataDiv"), false);
+		let output = await super.createProcessor(chart, folder, "extended", false);
 
+		let form = document.createElement("form");
+		let amountChooser = document.createElement("input");
+		amountChooser.type = "number";
+		amountChooser.min = 1;
+		amountChooser.name = "howMany";
+		amountChooser.placeholder = "How many?"
+		form.appendChild(amountChooser);
+		dataDiv.appendChild(form);
+
+		output.elementsForEventHandlers["change"] = [amountChooser];
+
+		delete output.statsToShow.addData;
 		return output;
 	}
 }

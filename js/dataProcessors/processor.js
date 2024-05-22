@@ -21,6 +21,10 @@ export default class Processor {
 	 */
 	neededFolderHandle;
 	/**
+	 * @todo document this
+	 */
+	elementsForEventHandlers = {};
+	/**
 	 * An object that contains the stats that get shown on the chart
 	 */
 	statsToShow = {
@@ -93,17 +97,16 @@ export default class Processor {
 
 	/**
 	 * currently referenced in [TopList]
-	 * @todo properly standardize
 	 * @returns 
 	 */
 	getElementsForEventHandlers() {
-		return {};
+		return this.elementsForEventHandlers;
 	}
 
 	/**
 	 * 
 	 * @param {*} e 
-	 * @todo properly document, type verification
+	 * @todo properly document, type verification, throws when unexpected event gets dispatched
 	 */
 	eventHandler(e) { }
 	/**
