@@ -153,7 +153,7 @@ export default class TopList extends Processor {
 	 */
 	static async createProcessor(chart, folder) {
 		//Type validation is done in this function already
-		let output = await super.createProcessor(chart, folder, "extended", false);
+		let output = await super.createProcessor(chart, folder, "extended", document.querySelector("#dataDiv"), false);
 
 		let form = document.createElement("form");
 		let amountChooser = document.createElement("input");
