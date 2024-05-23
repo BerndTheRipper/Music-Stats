@@ -135,12 +135,23 @@ export default class TopList extends Processor {
 	}
 
 	//Currently only gets called for a new amount on the top list
+	//TODO make it work and make it work for all
 	eventHandler(e) {
 		if (e.type != "change") throw new Error("Unexpected event.");
 
-		let newAmount = e.target.value;
-		this.#howMany = parseInt(newAmount);
-		this.drawChart();
+		if (e.target.name == "howMany") {
+			let newAmount = e.target.value;
+			this.#howMany = parseInt(newAmount);
+			this.drawChart();
+		}
+		else if (e.target.type == "date") {
+			chosenDate = new Date(e.target.value);
+			if (isNaN(chosenDate.getDate())) chosenDate = null;
+			if (e.target.name == "startTime") {
+				this.#startingTime = chosenDate;
+			}
+		}
+
 		return;
 	}
 
@@ -162,9 +173,19 @@ export default class TopList extends Processor {
 		amountChooser.name = "howMany";
 		amountChooser.placeholder = "How many?"
 		form.appendChild(amountChooser);
-		dataDiv.appendChild(form);
 
-		output.elementsForEventHandlers["change"] = [amountChooser];
+		let startTimeChooser = document.createElement("input");
+		startTimeChooser.type = "date";
+		startTimeChooser.name = "startTime";
+		form.appendChild(startTimeChooser);
+
+		let endTimeChooser = document.createElement("input");
+		endTimeChooser.type = "date";
+		endTimeChooser.name = "endTime";
+		form.appendChild(endTimeChooser);
+
+		dataDiv.appendChild(form);
+		output.elementsForEventHandlers["change"] = [amountChooser, startTimeChooser, endTimeChooser];
 
 		delete output.statsToShow.addData;
 		return output;
