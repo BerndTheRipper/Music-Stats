@@ -7,7 +7,7 @@ import Processor from "./processor.js";
  * @classdesc Displays a list of the top n of either listened to artists or tracks by amount of streams within a given amount of time
  * @extends Processor
  * @todo Make it actually work
- * @todo add fuse against requesting more entries than there is data
+ * @todo add fuse against requesting more entries than there is data (might already have that?) check my 2022 data, if I really only listened to 26 unique artists after 01.01.2022. what exactly is the latest date here?
  * @todo maybe add by listening time
  */
 export default class TopList extends Processor {
@@ -68,9 +68,13 @@ export default class TopList extends Processor {
 
 	readStats(dataObject) {
 		this.data = {};
+		let keyString = "master_metadata_" + this.whatToGet + "_name";
 		for (let entry of dataObject) {
+			//If it's a podcast, it gets skipped for now
+			if (entry["spotify_episode_uri"] != null || entry["spotify_track_uri"] == null) {
+				continue;
+			}
 			let timestampToUse = entry["ts"];
-			let keyString = "master_metadata_" + this.whatToGet + "_name";
 			if (entry["offline"]) {
 				timestampToUse = entry["offline_timestamp"];
 			}
@@ -116,6 +120,7 @@ export default class TopList extends Processor {
 			}
 		}
 
+		this.statsToShow = {};
 		for (let key of this.#topList) {
 			this.statsToShow[key] = this.data[key];
 		}
@@ -142,16 +147,16 @@ export default class TopList extends Processor {
 		if (e.target.name == "howMany") {
 			let newAmount = e.target.value;
 			this.#howMany = parseInt(newAmount);
-			this.drawChart();
 		}
 		else if (e.target.type == "date") {
-			chosenDate = new Date(e.target.value);
+			let chosenDate = new Date(e.target.value);
 			if (isNaN(chosenDate.getDate())) chosenDate = null;
 			if (e.target.name == "startTime") {
 				this.#startingTime = chosenDate;
 			}
 		}
 
+		this.drawChart();
 		return;
 	}
 
