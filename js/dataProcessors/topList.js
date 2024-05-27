@@ -6,7 +6,7 @@ import Processor from "./processor.js";
  * @hideconstructor
  * @classdesc Displays a list of the top n of either listened to artists or tracks by amount of streams within a given amount of time
  * @extends Processor
- * @todo Make it actually work
+ * @todo maybe add toplist combined, and how big is the percentage the top list has
  * @todo add fuse against requesting more entries than there is data (might already have that?) check my 2022 data, if I really only listened to 26 unique artists after 01.01.2022. what exactly is the latest date here?
  * @todo maybe add by listening time
  */
@@ -153,6 +153,9 @@ export default class TopList extends Processor {
 			if (isNaN(chosenDate.getDate())) chosenDate = null;
 			if (e.target.name == "startTime") {
 				this.#startingTime = chosenDate;
+			}
+			else if (e.target.name == "endTime") {
+				this.#endingTime = chosenDate;
 			}
 		}
 
