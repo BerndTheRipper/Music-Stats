@@ -47,6 +47,43 @@ export default class Processor {
 		}
 	};
 
+	//If these two are unset the start and end time can be anything
+	//startingtime <= time < endingTime
+	_startingTime = null;
+	_endingTime = null;
+
+	get startingTime() {
+		return this._startingTime;
+	}
+
+	set startingTime(value) {
+		if (this._startingTime == value) return;
+
+		let processedDate = this.#dateInputProcessor(value);
+
+		if (this._startingTime == null && processedDate == null) return;
+		if (this._startingTime != null && processedDate != null && this._startingTime.getTime() == processedDate.getTime()) return;
+
+		this._startingTime = processedDate;
+		this.drawChart();
+	}
+
+	get endingTime() {
+		return this._endingTime;
+	}
+
+	set endingTime(value) {
+		if (this._endingTime == value) return;
+
+		let processedDate = this.#dateInputProcessor(value);
+
+		if (this._endingTime == null && processedDate == null) return;
+		if (this._endingTime != null && processedDate != null && this._endingTime.getTime() == processedDate.getTime()) return;
+
+		this._endingTime = processedDate;
+		this.drawChart();
+	}
+
 	constructor() {
 		if (!Processor.#initializing) {
 			throw new SyntaxError("This constructor is private. Please use createProcessor instead.");
@@ -109,6 +146,16 @@ export default class Processor {
 	 * @todo properly document, type verification, throws when unexpected event gets dispatched
 	 */
 	eventHandler(e) { }
+
+	//returns null if input does not resolve to a date, or a date object if it does
+	#dateInputProcessor(input) {
+		if (input instanceof Date) return input;
+		if (input == null) return null;
+		let dateObject = new Date(input);
+		if (isNaN(dateObject.getTime())) return null;
+		return dateObject;
+	}
+
 	/**
 	 * Creates a new processor. This constructor makes type validations and 
 	 * @param {Chart} chart The chart that should be drawn into

@@ -26,6 +26,12 @@ window.addEventListener("load", () => {
 	let diagramChooser = document.querySelector("#diagramChooser");
 	diagramChooser.addEventListener("change", requestNewDiagram);
 
+	let startTime = document.querySelector("#startTime");
+	startTime.addEventListener("change", timeEdgesChanged);
+
+	let endTime = document.querySelector("#endTime");
+	endTime.addEventListener("change", timeEdgesChanged);
+
 	currentChart = new Chart(document.querySelector("#chartCanvas"));
 });
 
@@ -81,6 +87,17 @@ async function dataSelectorClicked(e) {
 	let diagramChooser = document.querySelector("#diagramChooser");
 	let changeEvent = new Event("change");
 	diagramChooser.dispatchEvent(changeEvent);
+}
+
+function timeEdgesChanged(e) {
+	if (currentProcessor == null) return;
+	if (!e.target.value.startsWith("20")) return;
+	if (e.target.id == "startTime") {
+		currentProcessor.startingTime = e.target.value;
+	}
+	else if (e.target.id == "endTime") {
+		currentProcessor.endingTime = e.target.value;
+	}
 }
 
 function eventPasser(e) {

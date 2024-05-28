@@ -19,10 +19,6 @@ export default class TopList extends Processor {
 	#topList = [];
 	data = {};
 
-	//If these two are unset the start and end time can be anything
-	//startingtime <= time < endingTime
-	#startingTime = null;
-	#endingTime = null;
 
 	/**
 	 * what to get, whether the top artists or tracks should be obtained
@@ -81,11 +77,11 @@ export default class TopList extends Processor {
 
 			let dateObject = new Date(timestampToUse);
 
-			if (this.#startingTime != null && dateObject.getTime() < this.#startingTime.getTime()) {
+			if (this._startingTime != null && dateObject.getTime() < this._startingTime.getTime()) {
 				continue;
 			}
 
-			if (this.#endingTime != null && dateObject.getTime() >= this.#endingTime.getTime()) {
+			if (this._endingTime != null && dateObject.getTime() >= this._endingTime.getTime()) {
 				continue;
 			}
 
@@ -152,10 +148,10 @@ export default class TopList extends Processor {
 			let chosenDate = new Date(e.target.value);
 			if (isNaN(chosenDate.getDate())) chosenDate = null;
 			if (e.target.name == "startTime") {
-				this.#startingTime = chosenDate;
+				this._startingTime = chosenDate;
 			}
 			else if (e.target.name == "endTime") {
-				this.#endingTime = chosenDate;
+				this._endingTime = chosenDate;
 			}
 		}
 
@@ -182,18 +178,8 @@ export default class TopList extends Processor {
 		amountChooser.placeholder = "How many?"
 		form.appendChild(amountChooser);
 
-		let startTimeChooser = document.createElement("input");
-		startTimeChooser.type = "date";
-		startTimeChooser.name = "startTime";
-		form.appendChild(startTimeChooser);
-
-		let endTimeChooser = document.createElement("input");
-		endTimeChooser.type = "date";
-		endTimeChooser.name = "endTime";
-		form.appendChild(endTimeChooser);
-
 		dataDiv.appendChild(form);
-		output.elementsForEventHandlers["change"] = [amountChooser, startTimeChooser, endTimeChooser];
+		output.elementsForEventHandlers["change"] = [amountChooser];
 
 		delete output.statsToShow.addData;
 		return output;
