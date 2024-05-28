@@ -138,7 +138,12 @@ export default class TopList extends Processor {
 	//Currently only gets called for a new amount on the top list
 	//TODO make it work and make it work for all
 	eventHandler(e) {
-		if (e.type != "change") throw new Error("Unexpected event.");
+		if (e.type == "submit") {
+			e.preventDefault();
+			return;
+		}
+
+		if (e.type != "change" && e.type != "submit") throw new Error("Unexpected event.");
 
 		if (e.target.name == "howMany") {
 			let newAmount = e.target.value;
@@ -180,6 +185,7 @@ export default class TopList extends Processor {
 
 		dataDiv.appendChild(form);
 		output.elementsForEventHandlers["change"] = [amountChooser];
+		output.elementsForEventHandlers["submit"] = [form];
 
 		delete output.statsToShow.addData;
 		return output;
