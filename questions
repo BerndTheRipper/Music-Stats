@@ -1,3 +1,5 @@
+Questions:
+
 hat sich mein Streaminganteil über die Jarhe verändert?
 Streaminganteil nach Betriebssystemen (ohne Runterbrechung auf Browser)
 Streaminganteil nach Betriebssystemen und auf Monate runtergebrochen
@@ -9,3 +11,8 @@ Boxplot über die Monate, in denen ich Musik gehört habe (meine ich damit zu we
 
 warum hat dieser Eintrag weder Titel noch Artist?
 [redacted from public repository]
+
+Features:
+Datumsauswahl für alle Diagramme
+Datumsauswahl mit Uhrzeit (umschaltbar)
+Zeitauswahl ohne spezifisches Datum
