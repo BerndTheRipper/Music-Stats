@@ -89,7 +89,12 @@ async function dataSelectorClicked(e) {
 	diagramChooser.dispatchEvent(changeEvent);
 }
 
+/**
+ * Handles the time edges for inclusion in the board being changed.
+ * @param {Event} e Information about the dispatching of the event.
+ */
 function timeEdgesChanged(e) {
+	if (!(e instanceof Event)) throw new TypeError("Invalid event provided");
 	if (currentProcessor == null) return;
 	if (!e.target.value.startsWith("20")) return;
 	if (e.target.id == "startTime") {
@@ -100,6 +105,10 @@ function timeEdgesChanged(e) {
 	}
 }
 
+/**
+ * If an event from a processor element gets dispatched, it will be passed on to the processor here. The handler is not called directly so that within the handler, "this" will represent the current Processor object instead of the node dispatching the event.
+ * @param {Event} e The information about the event (will be passed on to the current processor)
+ */
 function eventPasser(e) {
 	currentProcessor.eventHandler(e);
 }

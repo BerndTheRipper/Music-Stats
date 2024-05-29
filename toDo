@@ -14,5 +14,5 @@ warum hat dieser Eintrag weder Titel noch Artist?
 
 Features:
 Datumsauswahl für alle Diagramme
-Datumsauswahl mit Uhrzeit (umschaltbar)
-Zeitauswahl ohne spezifisches Datum
+Zeitauswahl in separaten input-Elementen.
+Erkennung, wenn Zeitpunktinputs geleert werden

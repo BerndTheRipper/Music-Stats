@@ -22,6 +22,8 @@ export default class Processor {
 	neededFolderHandle;
 	/**
 	 * @todo document this
+	 * Elements that should get event handlers. The key is a string representing a type of event, e.g. "change" or "submit". The value represents an array of nodes that should have this event handler applied to them. The applying is done in the start.js file.
+	 * See {@link Processor.eventHandler} for why I do it this way.
 	 */
 	elementsForEventHandlers = {};
 	/**
@@ -49,7 +51,13 @@ export default class Processor {
 
 	//If these two are unset the start and end time can be anything
 	//startingtime <= time < endingTime
+	/**
+	 * The starting time for the inclusion of the stats in the chart.
+	 */
 	_startingTime = null;
+	/**
+	 * The ending time for the inclusion of the stats in the chart.
+	 */
 	_endingTime = null;
 
 	get startingTime() {
@@ -133,21 +141,28 @@ export default class Processor {
 	}
 
 	/**
-	 * currently referenced in [TopList]
-	 * @returns 
+	 * Returns the elements that should have an event handler applied to them.
+	 * @returns {Object} containing the event type that is to be handled as a key and an array with the nodes to be handled as a value.
 	 */
 	getElementsForEventHandlers() {
 		return this.elementsForEventHandlers;
 	}
 
 	/**
-	 * 
-	 * @param {*} e 
+	 * Handles any events that are dispatched because of the processor, for example the amount chooser in {@link TopList}.
+	 * This function gets called from start.js instead of from the node at which the event was dispatched so I can have the this-object be the current processor instance instead of the node that dispatched the event.
+	 * @abstract
+	 * @param {Event} e data about the event
+	 * @throws {Error} When you submit an unexpected event
 	 * @todo properly document, type verification, throws when unexpected event gets dispatched
 	 */
 	eventHandler(e) { }
 
-	//returns null if input does not resolve to a date, or a date object if it does
+	/**
+	 * Processes an input to a date object. If the input is a string that can be resolved to a Date object, such a date object is returned. If a date object is provided, the date object is returned. If anything else is provided, the output is null.
+	 * @param {Date|string|int} input The input that is to be processed
+	 * @returns {Date|null} The resolved date or a null, if processing fails
+	 */
 	#dateInputProcessor(input) {
 		if (input instanceof Date) return input;
 		if (input == null) return null;

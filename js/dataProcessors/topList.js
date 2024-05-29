@@ -136,7 +136,6 @@ export default class TopList extends Processor {
 	}
 
 	//Currently only gets called for a new amount on the top list
-	//TODO make it work and make it work for all
 	eventHandler(e) {
 		if (e.type == "submit") {
 			e.preventDefault();
