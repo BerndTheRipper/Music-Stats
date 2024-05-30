@@ -96,7 +96,7 @@ export default class Processor {
 	/**
 	 * @abstract
 	 * reads the needed stats from the object provided
-	 * @param {*} dataObject The object to be rad from. Objects are specified by descendents
+	 * @param {*} dataObject The object to be read from. Objects are specified by descendents
 	 */
 	readStats(dataObject) { }
 
@@ -193,6 +193,8 @@ export default class Processor {
 
 	/**
 	 * Creates a new processor. This constructor makes type validations and 
+	 * @todo-docs: complete this explainer line
+	 * @todo take into account already entered times for this
 	 * @param {Chart} chart The chart that should be drawn into
 	 * @param {FileSystemDirectoryHandle} folder The folder to read the data from
 	 * @param {string} neededFolder The name of the data folder that we need
