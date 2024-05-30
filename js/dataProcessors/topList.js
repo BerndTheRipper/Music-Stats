@@ -42,6 +42,8 @@ export default class TopList extends Processor {
 
 
 	async drawChart() {
+		this.statsToShow = {};
+		this._insertAddDataFunctionToObject(this.statsToShow);
 		await this.readFiles();
 		this.cleanupData();
 		this.setUpChart();
@@ -116,7 +118,6 @@ export default class TopList extends Processor {
 			}
 		}
 
-		this.statsToShow = {};
 		for (let key of this.#topList) {
 			this.statsToShow[key] = this.data[key];
 		}

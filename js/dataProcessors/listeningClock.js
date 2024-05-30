@@ -20,6 +20,8 @@ export default class ListeningClock extends Processor {
 	 * draws new polar area chart representing where I streamed how many songs
 	 */
 	async drawChart() {
+		this.statsToShow = {};
+		this._insertAddDataFunctionToObject(this.statsToShow);
 		await this.readFiles();
 		this.cleanupData();
 		this.setUpChart();

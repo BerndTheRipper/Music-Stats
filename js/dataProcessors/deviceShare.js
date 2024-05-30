@@ -36,6 +36,8 @@ export default class DeviceShare extends Processor {
 	 * draws new pie chart representing where I streamed how many songs
 	 */
 	async drawChart() {
+		this.statsToShow = {};
+		this._insertAddDataFunctionToObject(this.statsToShow);
 		await this.readFiles();
 		this.cleanupData();
 		this.setUpChart();

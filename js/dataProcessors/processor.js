@@ -29,25 +29,7 @@ export default class Processor {
 	/**
 	 * An object that contains the stats that get shown on the chart
 	 */
-	statsToShow = {
-		addData: function (stuffToAdd) {
-			for (let [key, value] of Object.entries(stuffToAdd)) {
-				if (typeof value == "object") {
-					if (!this[key]) {
-						this[key] = { addData: this.addData };
-					}
-					this[key].addData(value);
-				}
-				else if (typeof value == "number") {
-					if (!this[key]) {
-						this[key] = value;
-						continue;
-					}
-					this[key] += value;
-				}
-			}
-		}
-	};
+	statsToShow = {};
 
 	//If these two are unset the start and end time can be anything
 	//startingtime <= time < endingTime
@@ -169,6 +151,27 @@ export default class Processor {
 		let dateObject = new Date(input);
 		if (isNaN(dateObject.getTime())) return null;
 		return dateObject;
+	}
+
+	//TODO recursive addData remover
+	_insertAddDataFunctionToObject(object) {
+		object["addData"] = function (stuffToAdd) {
+			for (let [key, value] of Object.entries(stuffToAdd)) {
+				if (typeof value == "object") {
+					if (!this[key]) {
+						this[key] = { addData: this.addData };
+					}
+					this[key].addData(value);
+				}
+				else if (typeof value == "number") {
+					if (!this[key]) {
+						this[key] = value;
+						continue;
+					}
+					this[key] += value;
+				}
+			}
+		}
 	}
 
 	/**
