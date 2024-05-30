@@ -48,7 +48,13 @@ export default class ListeningClock extends Processor {
 		let output = {};
 		let totalStreams = dataObject.length;
 		for (let entry of dataObject) {
-			let hourToAdd = new Date(entry.ts).getHours();
+			let timestampToUse = entry["ts"];
+			if (entry["offline"]) {
+				timestampToUse = entry["offline_timestamp"];
+			}
+			let dateObject = new Date(timestampToUse);
+
+			let hourToAdd = dateObject.getHours();
 			if (entry.offline) {
 				if (!entry.offline_timestamp) throw new Error("Something wrong? offline_timestamp should be set because entry.offline is true");
 				hourToAdd = new Date(entry.offline_timestamp).getHours();
