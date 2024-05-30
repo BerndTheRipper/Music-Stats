@@ -153,6 +153,23 @@ export default class Processor {
 		return dateObject;
 	}
 
+	_dateWithinTimeframe(input) {
+		if (this._startingTime == this._endingTime && this._endingTime == null) return true;
+		let dateObject = this.#dateInputProcessor(input);
+		if (dateObject == null) throw new TypeError("Input does not resolve to a Date object.");
+
+		//Not to self because I was wondering about it: I retain the check if this._startTime is null  because the beginning condition only stops the programme if both this._startTime and this._endTime are null, not if only one of them is.
+		if (this._startingTime != null && dateObject.getTime() < this._startingTime.getTime()) {
+			return false;
+		}
+
+		if (this._endingTime != null && dateObject.getTime() >= this._endingTime.getTime()) {
+			return false;
+		}
+
+		return true;
+	}
+
 	//TODO recursive addData remover
 	_insertAddDataFunctionToObject(object) {
 		object["addData"] = function (stuffToAdd) {

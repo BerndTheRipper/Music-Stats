@@ -55,6 +55,7 @@ export default class ListeningClock extends Processor {
 				timestampToUse = entry["offline_timestamp"];
 			}
 			let dateObject = new Date(timestampToUse);
+			if (!this._dateWithinTimeframe(dateObject)) continue;
 
 			let hourToAdd = dateObject.getHours();
 			if (entry.offline) {

@@ -77,15 +77,7 @@ export default class TopList extends Processor {
 				timestampToUse = entry["offline_timestamp"];
 			}
 
-			let dateObject = new Date(timestampToUse);
-
-			if (this._startingTime != null && dateObject.getTime() < this._startingTime.getTime()) {
-				continue;
-			}
-
-			if (this._endingTime != null && dateObject.getTime() >= this._endingTime.getTime()) {
-				continue;
-			}
+			if (!this._dateWithinTimeframe(timestampToUse)) continue;
 
 			if (!this.data[entry[keyString]]) {
 				this.data[entry[keyString]] = 1;

@@ -61,6 +61,12 @@ export default class DeviceShare extends Processor {
 		let output = {};
 		let totalStreams = dataObject.length;
 		for (let entry of dataObject) {
+			let timestampToUse = entry["ts"];
+			if (entry["offline"]) {
+				timestampToUse = entry["offline_timestamp"];
+			}
+			if (!this._dateWithinTimeframe(timestampToUse)) continue;
+
 			let platformToList = entry.platform;
 
 			if (!output[platformToList]) {
