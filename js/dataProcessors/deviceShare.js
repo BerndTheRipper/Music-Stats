@@ -24,6 +24,7 @@ export default class DeviceShare extends Processor {
 		"Browser windows"
 	];
 	totalStreams = 0;
+	showAsPercentage = true;
 	/**
 	 * Don't use! Use [createProcessor]{@link DeviceShare.createProcessor} instead.
 	 * @throws {SyntaxError} If this function gets called directly
@@ -37,6 +38,8 @@ export default class DeviceShare extends Processor {
 	 */
 	async drawChart() {
 		this.statsToShow = {};
+		this.totalStreams = 0;
+
 		this._insertAddDataFunctionToObject(this.statsToShow);
 		await this.readFiles();
 		this.cleanupData();
@@ -59,7 +62,7 @@ export default class DeviceShare extends Processor {
 
 	readStats(dataObject) {
 		let output = {};
-		let totalStreams = dataObject.length;
+		this.totalStreams += dataObject.length;
 		for (let entry of dataObject) {
 			let timestampToUse = entry["ts"];
 			if (entry["offline"]) {
@@ -98,6 +101,12 @@ export default class DeviceShare extends Processor {
 			this.statsToShow[statsSection] += this.statsToShow[key];
 			delete this.statsToShow[key];
 		}
+
+		if (this.showAsPercentage) {
+			for (let key of Object.keys(this.statsToShow)) {
+				this.statsToShow[key] = this.statsToShow[key] / this.totalStreams * 100;
+			}
+		}
 	}
 
 	setUpChart() {
@@ -122,8 +131,16 @@ export default class DeviceShare extends Processor {
 	 * @throws {TypeError} if one of the parameters has an incorrect type
 	 */
 	static async createProcessor(chart, folder) {
+
 		//Type validation is done in this function already
-		let output = await super.createProcessor(chart, folder, "extended");
+		//TODO get controls through parameters
+		let output = await super.createProcessor(chart, folder, "extended", null, true, document.querySelector("#chartSpecificControls"));
+
+		let percentButton = document.createElement("button");
+		output.elementsForEventHandlers = {
+			"click": [percentButton]
+		};
+		output.chartSpecificControlDiv.appendChild(percentButton);
 
 		return output;
 	}

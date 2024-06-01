@@ -12,6 +12,8 @@ export default class Processor {
 	 * The readily initialized chart
 	 */
 	chart;
+	/**@todo document */
+	chartSpecificControlDiv;
 	/**
 	 * If the stats should not be shown as a chart, they can be put in this div instead
 	 */
@@ -202,7 +204,7 @@ export default class Processor {
 	 * @param {boolean} [showChart=true] Whether or not a chart should be shown
 	 * @throws {TypeError} if one of the parameters has an incorrect type
 	 */
-	static async createProcessor(chart, folder, neededFolder, dataDiv = null, showChart = true) {
+	static async createProcessor(chart, folder, neededFolder, dataDiv = null, showChart = true, chartSpecificControlDiv = null) {
 		if (!(chart instanceof Chart)) {
 			throw new TypeError("Chart parameter needs to be of type Chart (duh)");
 		}
@@ -248,6 +250,11 @@ export default class Processor {
 		if (dataDiv != null) {
 			dataDiv.innerHTML = "";
 			output.dataDiv = dataDiv;
+		}
+
+		if (chartSpecificControlDiv != null) {
+			chartSpecificControlDiv.innerHTML = "";
+			output.chartSpecificControlDiv = chartSpecificControlDiv;
 		}
 
 		return output;
