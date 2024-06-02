@@ -32,6 +32,9 @@ window.addEventListener("load", () => {
 	let endTime = document.querySelector("#endTime");
 	endTime.addEventListener("change", timeEdgesChanged);
 
+	let clockSwitcher = document.querySelector("#clockSwitcher");
+	clockSwitcher.addEventListener("click", clockSwitcherClicked);
+
 	currentChart = new Chart(document.querySelector("#chartCanvas"));
 });
 
@@ -102,6 +105,24 @@ function timeEdgesChanged(e) {
 	}
 	else if (e.target.id == "endTime") {
 		currentProcessor.endingTime = e.target.value;
+	}
+}
+
+function clockSwitcherClicked(e) {
+	if (!(e instanceof PointerEvent)) throw new TypeError("Invalid event provided");
+	let startTime = document.querySelector("#startTime");
+	let endTime = document.querySelector("#endTime");
+
+	if (startTime.type != endTime.type) throw new Error("TODO: Define");
+	if (startTime.type == "date") {
+		startTime.type = "datetime-local";
+		endTime.type = "datetime-local";
+		e.target.innerText = "Ohne Uhrzeit";
+	}
+	else {
+		startTime.type = "date";
+		endTime.type = "date";
+		e.target.innerText = "Mit Uhrzeit";
 	}
 }
 
