@@ -108,6 +108,12 @@ function timeEdgesChanged(e) {
 	}
 }
 
+/**
+ * Handles it when the time specification button is clicked and will either activate specifyying a time or deactivate it.
+ * @todo transfer dates
+ * @param {PointerEvent} e The data associated to the click event
+ * @throws {TypeError} if e is not a PointerEvent
+ */
 function clockSwitcherClicked(e) {
 	if (!(e instanceof PointerEvent)) throw new TypeError("Invalid event provided");
 	let startTime = document.querySelector("#startTime");

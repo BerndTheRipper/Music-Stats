@@ -12,7 +12,9 @@ export default class Processor {
 	 * The readily initialized chart
 	 */
 	chart;
-	/**@todo document */
+	/**
+	 * The div that contains the controls that are specific to this chart, for example the chooser between percent and absolute amounts on the 
+	 */
 	chartSpecificControlDiv;
 	/**
 	 * If the stats should not be shown as a chart, they can be put in this div instead
@@ -23,7 +25,6 @@ export default class Processor {
 	 */
 	neededFolderHandle;
 	/**
-	 * @todo document this
 	 * Elements that should get event handlers. The key is a string representing a type of event, e.g. "change" or "submit". The value represents an array of nodes that should have this event handler applied to them. The applying is done in the start.js file.
 	 * See {@link Processor.eventHandler} for why I do it this way.
 	 */
@@ -138,7 +139,6 @@ export default class Processor {
 	 * @abstract
 	 * @param {Event} e data about the event
 	 * @throws {Error} When you submit an unexpected event
-	 * @todo properly document, type verification, throws when unexpected event gets dispatched
 	 */
 	eventHandler(e) { }
 
@@ -155,6 +155,12 @@ export default class Processor {
 		return dateObject;
 	}
 
+	/**
+	 * Determines wether or not the input is within the date area
+	 * @param {Date|string|int} input The date that is to be verified
+	 * @returns Wether or not it is within the starting and ending time
+	 * @throws {TypeError} When the input does not resolve to a date.
+	 */
 	_dateWithinTimeframe(input) {
 		if (this._startingTime == this._endingTime && this._endingTime == null) return true;
 		let dateObject = this.#dateInputProcessor(input);
@@ -173,7 +179,14 @@ export default class Processor {
 	}
 
 	//TODO recursive addData remover
+	/**
+	 * Adds an addData function to an object
+	 * @param {Object} object The object that should get the addData function (normally this.statsToShow)
+	 * @todo make it work properly
+	 * @throws {TypeError} If called with something other than an object.
+	 */
 	_insertAddDataFunctionToObject(object) {
+		if (typeof object != "object") throw new TypeError("The provided object is not actually an object.");
 		object["addData"] = function (stuffToAdd) {
 			for (let [key, value] of Object.entries(stuffToAdd)) {
 				if (typeof value == "object") {
@@ -194,14 +207,14 @@ export default class Processor {
 	}
 
 	/**
-	 * Creates a new processor. This constructor makes type validations and 
-	 * @todo-docs: complete this explainer line
+	 * Creates a new processor. This constructor makes type validations and sets up all the internal variables such as the needed folder or wether or not to show the chart.
 	 * @todo take into account already entered times for this
 	 * @param {Chart} chart The chart that should be drawn into
 	 * @param {FileSystemDirectoryHandle} folder The folder to read the data from
 	 * @param {string} neededFolder The name of the data folder that we need
-	 * @param {null} [dataDiv=null] The div that will cotain further information on the stats, or maybe even the stats themselves
+	 * @param {Element|null} [dataDiv=null] The div that will cotain further information on the stats, or maybe even the stats themselves
 	 * @param {boolean} [showChart=true] Whether or not a chart should be shown
+	 * @param {Element|null} [chartSpecificControlDiv=null] The chart controls like the swither from percent or stream amount
 	 * @throws {TypeError} if one of the parameters has an incorrect type
 	 */
 	static async createProcessor(chart, folder, neededFolder, dataDiv = null, showChart = true, chartSpecificControlDiv = null) {
