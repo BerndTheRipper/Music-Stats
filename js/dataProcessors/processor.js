@@ -182,7 +182,7 @@ export default class Processor {
 	/**
 	 * Adds an addData function to an object
 	 * @param {Object} object The object that should get the addData function (normally this.statsToShow)
-	 * @todo make it work properly
+	 * @todo This is not the problem, the problem is this getting called in too quick succession, making one redraw interfere with the other. Needs fixing that I can't do before midnight.
 	 * @throws {TypeError} If called with something other than an object.
 	 */
 	_insertAddDataFunctionToObject(object) {
