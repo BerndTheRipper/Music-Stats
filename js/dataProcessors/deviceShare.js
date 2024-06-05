@@ -124,6 +124,21 @@ export default class DeviceShare extends Processor {
 		this.chart.config.data = data;
 	}
 
+	eventHandler(e) {
+		if (!(e instanceof PointerEvent)) throw new TypeError("e is not a pointer event");
+		this.showAsPercentage = !this.showAsPercentage;
+		this.updatePercentageButton(e.target);
+	}
+
+	updatePercentageButton(button) {
+		if (this.showAsPercentage) {
+			button.innerText = "In Prozent anzeigen";
+		}
+		else {
+			button.innerText = "In Streams anzeigen";
+		}
+	}
+
 	/**
 	 * Creates the processor
 	 * @param {Chart} chart A pre-initialized chart object
@@ -140,6 +155,7 @@ export default class DeviceShare extends Processor {
 		output.elementsForEventHandlers = {
 			"click": [percentButton]
 		};
+		output.updatePercentageButton(percentButton);
 		output.chartSpecificControlDiv.appendChild(percentButton);
 
 		return output;
