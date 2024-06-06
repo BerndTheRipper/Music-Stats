@@ -27,10 +27,10 @@ window.addEventListener("load", () => {
 	diagramChooser.addEventListener("change", requestNewDiagram);
 
 	let startTime = document.querySelector("#startTime");
-	startTime.addEventListener("change", timeEdgesChanged);
+	startTime.addEventListener("focusout", timeEdgesUnfocused);
 
 	let endTime = document.querySelector("#endTime");
-	endTime.addEventListener("change", timeEdgesChanged);
+	endTime.addEventListener("focusout", timeEdgesUnfocused);
 
 	let clockSwitcher = document.querySelector("#clockSwitcher");
 	clockSwitcher.addEventListener("click", clockSwitcherClicked);
@@ -96,16 +96,35 @@ async function dataSelectorClicked(e) {
  * Handles the time edges for inclusion in the board being changed.
  * @param {Event} e Information about the dispatching of the event.
  */
-function timeEdgesChanged(e) {
-	if (!(e instanceof Event)) throw new TypeError("Invalid event provided");
+async function timeEdgesUnfocused(e) {
+	if (!(e instanceof FocusEvent)) throw new TypeError("Invalid event provided");
+
 	if (currentProcessor == null) return;
 	if (!e.target.value.startsWith("20")) return;
-	if (e.target.id == "startTime") {
-		currentProcessor.startingTime = e.target.value;
+	let startingTimeElement = document.querySelector("#startTime");
+	let endingTimeElement = document.querySelector("#endTime");
+	if (e.relatedTarget == startingTimeElement || e.relatedTarget == endingTimeElement) return;
+
+	//TODO account for absence of values
+	let userStartingTime = new Date(startingTimeElement.value);
+	let userEndingTime = new Date(endingTimeElement.value);
+	let redrawNeeded = false;
+
+	if (userStartingTime.getTime() != currentProcessor.startingTime.getTime()) {
+		currentProcessor.setStartingTime(userStartingTime, false);
+		redrawNeeded = true;
 	}
-	else if (e.target.id == "endTime") {
-		currentProcessor.endingTime = e.target.value;
+	if (userEndingTime.getTime() != currentProcessor.endingTime.getTime()) {
+		currentProcessor.setEndingTime(userEndingTime, false);
+		redrawNeeded = true;
 	}
+
+
+	startingTimeElement.disabled = true;
+	endingTimeElement.disabled = true;
+	await currentProcessor.drawChart();
+	startingTimeElement.disabled = false;
+	endingTimeElement.disabled = false;
 }
 
 /**

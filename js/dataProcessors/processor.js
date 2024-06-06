@@ -5,6 +5,9 @@
  */
 export default class Processor {
 	/**
+	 * @todo add types to all of these (why haven't I done this before?)
+	 */
+	/**
 	 * Gets set to true if the constructor is being called through justifiable means.
 	 */
 	static #initializing = false;
@@ -49,32 +52,32 @@ export default class Processor {
 		return this._startingTime;
 	}
 
-	set startingTime(value) {
-		if (this._startingTime == value) return;
+	setStartingTime(newValue, redrawChart = true) {
+		if (this._startingTime == newValue) return;
 
-		let processedDate = this.#dateInputProcessor(value);
+		let processedDate = this.#dateInputProcessor(newValue);
 
 		if (this._startingTime == null && processedDate == null) return;
 		if (this._startingTime != null && processedDate != null && this._startingTime.getTime() == processedDate.getTime()) return;
 
 		this._startingTime = processedDate;
-		this.drawChart();
+		if (redrawChart) this.drawChart();
 	}
 
 	get endingTime() {
 		return this._endingTime;
 	}
 
-	set endingTime(value) {
-		if (this._endingTime == value) return;
+	setEndingTime(newValue, redrawChart = true) {
+		if (this._endingTime == newValue) return;
 
-		let processedDate = this.#dateInputProcessor(value);
+		let processedDate = this.#dateInputProcessor(newValue);
 
 		if (this._endingTime == null && processedDate == null) return;
 		if (this._endingTime != null && processedDate != null && this._endingTime.getTime() == processedDate.getTime()) return;
 
 		this._endingTime = processedDate;
-		this.drawChart();
+		if (redrawChart) this.drawChart();
 	}
 
 	constructor() {
