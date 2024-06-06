@@ -62,13 +62,13 @@ export default class DeviceShare extends Processor {
 
 	readStats(dataObject) {
 		let output = {};
-		this.totalStreams += dataObject.length;
 		for (let entry of dataObject) {
 			let timestampToUse = entry["ts"];
 			if (entry["offline"]) {
 				timestampToUse = entry["offline_timestamp"];
 			}
 			if (!this._dateWithinTimeframe(timestampToUse)) continue;
+			this.totalStreams++;
 
 			let platformToList = entry.platform;
 
@@ -124,18 +124,22 @@ export default class DeviceShare extends Processor {
 		this.chart.config.data = data;
 	}
 
-	eventHandler(e) {
+	async eventHandler(e) {
 		if (!(e instanceof PointerEvent)) throw new TypeError("e is not a pointer event");
 		this.showAsPercentage = !this.showAsPercentage;
+		e.target.disabled = true;
+		e.target.innerText = "Bitte warten...";
+		await this.drawChart();
 		this.updatePercentageButton(e.target);
+		e.target.disabled = false;
 	}
 
 	updatePercentageButton(button) {
 		if (this.showAsPercentage) {
-			button.innerText = "In Prozent anzeigen";
+			button.innerText = "In Streams anzeigen";
 		}
 		else {
-			button.innerText = "In Streams anzeigen";
+			button.innerText = "In Prozent anzeigen";
 		}
 	}
 
