@@ -1,3 +1,5 @@
+import DataUtils from "../dataUtils.js";
+
 /**
  * @class
  * @hideconstructor
@@ -55,7 +57,7 @@ export default class Processor {
 	setStartingTime(newValue, redrawChart = true) {
 		if (this._startingTime == newValue) return;
 
-		let processedDate = this.#dateInputProcessor(newValue);
+		let processedDate = DataUtils.dateInputProcessor(newValue);
 
 		if (this._startingTime == null && processedDate == null) return;
 		if (this._startingTime != null && processedDate != null && this._startingTime.getTime() == processedDate.getTime()) return;
@@ -71,7 +73,7 @@ export default class Processor {
 	setEndingTime(newValue, redrawChart = true) {
 		if (this._endingTime == newValue) return;
 
-		let processedDate = this.#dateInputProcessor(newValue);
+		let processedDate = DataUtils.dateInputProcessor(newValue);
 
 		if (this._endingTime == null && processedDate == null) return;
 		if (this._endingTime != null && processedDate != null && this._endingTime.getTime() == processedDate.getTime()) return;
@@ -146,19 +148,6 @@ export default class Processor {
 	eventHandler(e) { }
 
 	/**
-	 * Processes an input to a date object. If the input is a string that can be resolved to a Date object, such a date object is returned. If a date object is provided, the date object is returned. If anything else is provided, the output is null.
-	 * @param {Date|string|int} input The input that is to be processed
-	 * @returns {Date|null} The resolved date or a null, if processing fails
-	 */
-	#dateInputProcessor(input) {
-		if (input instanceof Date) return input;
-		if (input == null) return null;
-		let dateObject = new Date(input);
-		if (isNaN(dateObject.getTime())) return null;
-		return dateObject;
-	}
-
-	/**
 	 * Determines wether or not the input is within the date area
 	 * @param {Date|string|int} input The date that is to be verified
 	 * @returns Wether or not it is within the starting and ending time
@@ -166,7 +155,7 @@ export default class Processor {
 	 */
 	_dateWithinTimeframe(input) {
 		if (this._startingTime == this._endingTime && this._endingTime == null) return true;
-		let dateObject = this.#dateInputProcessor(input);
+		let dateObject = DataUtils.dateInputProcessor(input);
 		if (dateObject == null) throw new TypeError("Input does not resolve to a Date object.");
 
 		//Not to self because I was wondering about it: I retain the check if this._startTime is null  because the beginning condition only stops the programme if both this._startTime and this._endTime are null, not if only one of them is.

@@ -28,4 +28,22 @@ export default class DataUtils {
 		}
 		return output;
 	}
+
+	/**
+	* Processes an input to a date object. If the input is a string that can be resolved to a Date object, such a date object is returned. If a date object is provided, the date object is returned. If anything else is provided, the output is null.
+	* @param {Date|string|int} input The input that is to be processed
+	* @returns {Date|null} The resolved date or a null, if processing fails
+	*/
+	static dateInputProcessor(input) {
+		if (input instanceof Date) {
+			if (isNaN(input.getTime())) {
+				return null;
+			}
+			return input;
+		}
+		if (input == null) return null;
+		let dateObject = new Date(input);
+		if (isNaN(dateObject.getTime())) return null;
+		return dateObject;
+	}
 }
