@@ -1,6 +1,7 @@
 import DeviceShare from "./dataProcessors/deviceShare.js"
 import ListeningClock from "./dataProcessors/listeningClock.js";
 import TopList from "./dataProcessors/topList.js";
+import DataUtils from "./dataUtils.js";
 
 var dataFolder;
 var currentChart;
@@ -93,38 +94,64 @@ async function dataSelectorClicked(e) {
 }
 
 /**
- * Handles the time edges for inclusion in the board being changed.
+ * Handles the changing of the timeEdges
  * @param {Event} e Information about the dispatching of the event.
  */
 async function timeEdgesUnfocused(e) {
 	if (!(e instanceof FocusEvent)) throw new TypeError("Invalid event provided");
 
 	if (currentProcessor == null) return;
-	if (!e.target.value.startsWith("20")) return;
 	let startingTimeElement = document.querySelector("#startTime");
 	let endingTimeElement = document.querySelector("#endTime");
 	if (e.relatedTarget == startingTimeElement || e.relatedTarget == endingTimeElement) return;
 
 	//TODO account for absence of values
-	let userStartingTime = new Date(startingTimeElement.value);
-	let userEndingTime = new Date(endingTimeElement.value);
+	let userStartingTime = DataUtils.dateInputProcessor(startingTimeElement.value);
+	let userEndingTime = DataUtils.dateInputProcessor(endingTimeElement.value);
 	let redrawNeeded = false;
 
-	if (userStartingTime.getTime() != currentProcessor.startingTime.getTime()) {
+	if (
+		(
+			(
+				userStartingTime == null ||
+				currentProcessor.startingTime == null
+			) &&
+			userStartingTime != currentProcessor.startingTime
+		) ||
+		(
+			userStartingTime instanceof Date &&
+			currentProcessor.startingTime instanceof Date &&
+			userStartingTime.getTime() != currentProcessor.startingTime.getTime()
+		)
+	) {
 		currentProcessor.setStartingTime(userStartingTime, false);
 		redrawNeeded = true;
 	}
-	if (userEndingTime.getTime() != currentProcessor.endingTime.getTime()) {
+	if (
+		(
+			(
+				userEndingTime == null ||
+				currentProcessor.endingTime == null
+			) &&
+			userEndingTime != currentProcessor.endingTime
+		) ||
+		(
+			userEndingTime instanceof Date &&
+			currentProcessor.endingTime instanceof Date &&
+			userEndingTime.getTime() != currentProcessor.endingTime.getTime()
+		)
+	) {
 		currentProcessor.setEndingTime(userEndingTime, false);
 		redrawNeeded = true;
 	}
 
-
-	startingTimeElement.disabled = true;
-	endingTimeElement.disabled = true;
-	await currentProcessor.drawChart();
-	startingTimeElement.disabled = false;
-	endingTimeElement.disabled = false;
+	if (redrawNeeded) {
+		startingTimeElement.disabled = true;
+		endingTimeElement.disabled = true;
+		await currentProcessor.drawChart();
+		startingTimeElement.disabled = false;
+		endingTimeElement.disabled = false;
+	}
 }
 
 /**
