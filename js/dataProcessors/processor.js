@@ -200,7 +200,6 @@ export default class Processor {
 
 	/**
 	 * Creates a new processor. This constructor makes type validations and sets up all the internal variables such as the needed folder or wether or not to show the chart.
-	 * @todo take into account already entered times for this
 	 * @param {Chart} chart The chart that should be drawn into
 	 * @param {FileSystemDirectoryHandle} folder The folder to read the data from
 	 * @param {string} neededFolder The name of the data folder that we need
@@ -261,6 +260,9 @@ export default class Processor {
 			chartSpecificControlDiv.innerHTML = "";
 			output.chartSpecificControlDiv = chartSpecificControlDiv;
 		}
+
+		output.setStartingTime(document.querySelector("#startTime").value, false);
+		output.setEndingTime(document.querySelector("#endTime").value, false);
 
 		return output;
 	}
