@@ -54,6 +54,13 @@ export default class Processor {
 		return this._startingTime;
 	}
 
+	/**
+	 * Set a new starting time and decide on wether or not to redraw the chart
+	 * @param {Date|string|null} newValue the new value
+	 * @param {boolean} [redrawChart=true] Wether or not to redraw the chart after the change
+	 * @throws {TypeError} When an incorrect type was provided
+	 * @returns 
+	 */
 	setStartingTime(newValue, redrawChart = true) {
 		if (this._startingTime == newValue) return;
 
@@ -70,6 +77,13 @@ export default class Processor {
 		return this._endingTime;
 	}
 
+	/**
+	 * Set a new starting time and decide on wether or not to redraw the chart
+	 * @param {Date|string|null} newValue the new value
+	 * @param {boolean} [redrawChart=true] Wether or not to redraw the chart after the change
+	 * @throws {TypeError} When an incorrect type was provided
+	 * @returns 
+	 */
 	setEndingTime(newValue, redrawChart = true) {
 		if (this._endingTime == newValue) return;
 
@@ -174,7 +188,6 @@ export default class Processor {
 	/**
 	 * Adds an addData function to an object
 	 * @param {Object} object The object that should get the addData function (normally this.statsToShow)
-	 * @todo This is not the problem, the problem is this getting called in too quick succession, making one redraw interfere with the other. Needs fixing that I can't do before midnight.
 	 * @throws {TypeError} If called with something other than an object.
 	 */
 	_insertAddDataFunctionToObject(object) {

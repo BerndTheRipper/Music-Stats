@@ -134,7 +134,12 @@ export default class DeviceShare extends Processor {
 		e.target.disabled = false;
 	}
 
+	/**
+	 * Enters the right text into the element provided. Should ideally be a button, but others are welcome as well.
+	 * @param {Element} button The button to enter the text into
+	 */
 	updatePercentageButton(button) {
+		if (!(button instanceof Element)) throw new TypeError("button needs to be an instance of Element");
 		if (this.showAsPercentage) {
 			button.innerText = "In Streams anzeigen";
 		}

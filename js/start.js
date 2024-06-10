@@ -105,7 +105,6 @@ async function timeEdgesUnfocused(e) {
 	let endingTimeElement = document.querySelector("#endTime");
 	if (e.relatedTarget == startingTimeElement || e.relatedTarget == endingTimeElement) return;
 
-	//TODO account for absence of values
 	let userStartingTime = DataUtils.dateInputProcessor(startingTimeElement.value);
 	let userEndingTime = DataUtils.dateInputProcessor(endingTimeElement.value);
 	let redrawNeeded = false;
@@ -156,7 +155,6 @@ async function timeEdgesUnfocused(e) {
 
 /**
  * Handles it when the time specification button is clicked and will either activate specifyying a time or deactivate it.
- * @todo transfer dates
  * @param {PointerEvent} e The data associated to the click event
  * @throws {TypeError} if e is not a PointerEvent
  */
@@ -165,7 +163,7 @@ function clockSwitcherClicked(e) {
 	let startTime = document.querySelector("#startTime");
 	let endTime = document.querySelector("#endTime");
 
-	if (startTime.type != endTime.type) throw new Error("TODO: Define");
+	if (startTime.type != endTime.type) throw new Error("The page seems corrupted. Try reloading it.");
 	if (startTime.type == "date") {
 		startTime.type = "datetime-local";
 		endTime.type = "datetime-local";
