@@ -59,9 +59,9 @@ async function requestNewDiagram(e) {
 
 	let eventHandlingNeeders = currentProcessor.getElementsForEventHandlers();
 
-	//TODO add type validation that each value is an array and each array entry is an element
 	for (let eventType of Object.keys(eventHandlingNeeders)) {
 		for (let element of eventHandlingNeeders[eventType]) {
+			if (!(element instanceof Element)) throw new Error("One of the values in the eventHandlingNeeders is not an element.");
 			element.addEventListener(eventType, eventPasser);
 		}
 	}
