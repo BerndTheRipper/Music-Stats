@@ -13,7 +13,7 @@ import Processor from "./processor.js";
 export default class TopList extends Processor {
 	//Possible values: album_artist, tracks
 	//Currently supported: neither
-	#whatToGet = "album_artist";
+	#whatToGet = "track";
 	#howMany = 10;
 	//Within the top #howMany, this list is sorted, after that it is not
 	#topList = [];
@@ -78,11 +78,17 @@ export default class TopList extends Processor {
 
 			if (!this._dateWithinTimeframe(timestampToUse)) continue;
 
-			if (!this.data[entry[keyString]]) {
-				this.data[entry[keyString]] = 1;
+			let keyInDataObject = entry[keyString];
+
+			if (this.#whatToGet == "track") {
+				keyInDataObject = entry["master_metadata_album_artist_name"] + " - " + keyInDataObject;
+			}
+
+			if (!this.data[keyInDataObject]) {
+				this.data[keyInDataObject] = 1;
 				continue;
 			}
-			this.data[entry[keyString]] += 1;
+			this.data[keyInDataObject] += 1;
 		}
 	}
 
