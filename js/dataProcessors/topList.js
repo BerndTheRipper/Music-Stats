@@ -12,7 +12,6 @@ import Processor from "./processor.js";
  */
 export default class TopList extends Processor {
 	//Possible values: album_artist, tracks
-	//Currently supported: neither
 	#whatToGet = "track";
 	#howMany = 10;
 	//Within the top #howMany, this list is sorted, after that it is not
@@ -140,7 +139,7 @@ export default class TopList extends Processor {
 			return;
 		}
 
-		if (e.type != "change" && e.type != "submit") throw new Error("Unexpected event.");
+		if (e.type != "change" && e.type != "submit" && !(e instanceof PointerEvent)) throw new Error("Unexpected event.");
 
 		if (e.target.name == "howMany") {
 			let newAmount = e.target.value;
@@ -156,9 +155,30 @@ export default class TopList extends Processor {
 				this._endingTime = chosenDate;
 			}
 		}
+		else if (e instanceof PointerEvent) {
+			if (this.#whatToGet == "track") {
+				this.#whatToGet = "album_artist";
+			}
+			else if (this.#whatToGet == "album_artist") {
+				this.#whatToGet = "track";
+			}
+			this.updateTopWhatButton(e.target);
+		}
 
 		this.drawChart();
 		return;
+	}
+
+	updateTopWhatButton(button) {
+		if (this.#whatToGet == "track") {
+			button.innerText = "Auf Top Künstler Umschalten";
+		}
+		else if (this.#whatToGet == "album_artist") {
+			button.innerText = "Auf Top Songs umschalten";
+		}
+		else {
+			throw new Error("whatToGet has an invalid value");
+		}
 	}
 
 	/**
@@ -170,7 +190,7 @@ export default class TopList extends Processor {
 	 */
 	static async createProcessor(chart, folder) {
 		//Type validation is done in this function already
-		let output = await super.createProcessor(chart, folder, "extended", document.querySelector("#dataDiv"), false);
+		let output = await super.createProcessor(chart, folder, "extended", document.querySelector("#dataDiv"), false, document.querySelector("#chartSpecificControls"));
 
 		let form = document.createElement("form");
 		let amountChooser = document.createElement("input");
@@ -183,6 +203,13 @@ export default class TopList extends Processor {
 		dataDiv.appendChild(form);
 		output.elementsForEventHandlers["change"] = [amountChooser];
 		output.elementsForEventHandlers["submit"] = [form];
+
+		let topWhatButton = document.createElement("button");
+		output.elementsForEventHandlers = {
+			"click": [topWhatButton]
+		};
+		output.updateTopWhatButton(topWhatButton);
+		output.chartSpecificControlDiv.appendChild(topWhatButton);
 
 		delete output.statsToShow.addData;
 		return output;

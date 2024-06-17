@@ -52,6 +52,8 @@ async function requestNewDiagram(e) {
 		console.warn("requestNewDiagram dispatch not trusted.");
 	}
 
+	document.querySelector("#chartSpecificControls").innerHTML = "";
+
 	let diagramClass = diagramClasses[e.target.value];
 
 	currentProcessor = await diagramClass.createProcessor(currentChart, dataFolder);
