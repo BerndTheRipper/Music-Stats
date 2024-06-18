@@ -8,11 +8,13 @@ import Processor from "./processor.js";
  * @extends Processor
  * @todo maybe add toplist combined, and how big is the percentage the top list has
  * @todo add fuse against requesting more entries than there is data (might already have that?) check my 2022 data, if I really only listened to 26 unique artists after 01.01.2022. what exactly is the latest date here?
- * @todo maybe add by listening time
+ * @todo make frontend input for listening time format
  */
 export default class TopList extends Processor {
 	//Possible values: album_artist, tracks
 	#whatToGet = "track";
+	//Possible values: streams, ms
+	unitToMeasure = "streams";
 	#howMany = 10;
 	//Within the top #howMany, this list is sorted, after that it is not
 	#topList = [];
@@ -83,11 +85,17 @@ export default class TopList extends Processor {
 				keyInDataObject = entry["master_metadata_album_artist_name"] + " - " + keyInDataObject;
 			}
 
+			let valueToAdd = 1;
+
+			if (this.unitToMeasure == "ms") {
+				valueToAdd = entry["ms_played"]
+			}
+
 			if (!this.data[keyInDataObject]) {
-				this.data[keyInDataObject] = 1;
+				this.data[keyInDataObject] = valueToAdd;
 				continue;
 			}
-			this.data[keyInDataObject] += 1;
+			this.data[keyInDataObject] += valueToAdd;
 		}
 	}
 
