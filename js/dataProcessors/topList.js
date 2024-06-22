@@ -213,9 +213,8 @@ export default class TopList extends Processor {
 		output.elementsForEventHandlers["submit"] = [form];
 
 		let topWhatButton = document.createElement("button");
-		output.elementsForEventHandlers = {
-			"click": [topWhatButton]
-		};
+		output.elementsForEventHandlers["click"] = [topWhatButton];
+
 		output.updateTopWhatButton(topWhatButton);
 		output.chartSpecificControlDiv.appendChild(topWhatButton);
 
