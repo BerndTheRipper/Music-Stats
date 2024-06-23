@@ -9,6 +9,7 @@ import Processor from "./processor.js";
  * @todo maybe add toplist combined, and how big is the percentage the top list has
  * @todo add fuse against requesting more entries than there is data (might already have that?) check my 2022 data, if I really only listened to 26 unique artists after 01.01.2022. what exactly is the latest date here?
  * @todo make frontend input for listening time format
+ * @todo doesn't it show 100 songs when I type in 100
  */
 export default class TopList extends Processor {
 	//Possible values: album_artist, tracks
@@ -164,13 +165,24 @@ export default class TopList extends Processor {
 			}
 		}
 		else if (e instanceof PointerEvent) {
-			if (this.#whatToGet == "track") {
-				this.#whatToGet = "album_artist";
+			if (e.target.id == "topWhatButton") {
+				if (this.#whatToGet == "track") {
+					this.#whatToGet = "album_artist";
+				}
+				else if (this.#whatToGet == "album_artist") {
+					this.#whatToGet = "track";
+				}
+				this.updateTopWhatButton(e.target);
 			}
-			else if (this.#whatToGet == "album_artist") {
-				this.#whatToGet = "track";
+			else if (e.target.id == "whatUnitButton") {
+				if (this.unitToMeasure == "streams") {
+					this.unitToMeasure = "ms";
+				}
+				else if (this.unitToMeasure == "ms") {
+					this.unitToMeasure = "streams";
+				}
+				this.updateUnitButton(e.target);
 			}
-			this.updateTopWhatButton(e.target);
 		}
 
 		this.drawChart();
@@ -186,6 +198,18 @@ export default class TopList extends Processor {
 		}
 		else {
 			throw new Error("whatToGet has an invalid value");
+		}
+	}
+
+	updateUnitButton(button) {
+		if (this.unitToMeasure == "streams") {
+			button.innerText = "In Milisekunden anzeigen";
+		}
+		else if (this.unitToMeasure == "ms") {
+			button.innerText = "In Streams anzeigen";
+		}
+		else {
+			throw new Error("unitToMeasure has an invalid value");
 		}
 	}
 
@@ -208,15 +232,21 @@ export default class TopList extends Processor {
 		amountChooser.placeholder = "How many?"
 		form.appendChild(amountChooser);
 
+		//TODO put this in chartSpecificControls
 		dataDiv.appendChild(form);
 		output.elementsForEventHandlers["change"] = [amountChooser];
 		output.elementsForEventHandlers["submit"] = [form];
 
 		let topWhatButton = document.createElement("button");
-		output.elementsForEventHandlers["click"] = [topWhatButton];
+		topWhatButton.id = "topWhatButton";
+		let whatUnitButton = document.createElement("button");
+		whatUnitButton.id = "whatUnitButton";
+		output.elementsForEventHandlers["click"] = [topWhatButton, whatUnitButton];
 
 		output.updateTopWhatButton(topWhatButton);
+		output.updateUnitButton(whatUnitButton);
 		output.chartSpecificControlDiv.appendChild(topWhatButton);
+		output.chartSpecificControlDiv.appendChild(whatUnitButton);
 
 		delete output.statsToShow.addData;
 		return output;
