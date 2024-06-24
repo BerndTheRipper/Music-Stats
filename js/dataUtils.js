@@ -18,7 +18,7 @@ export default class DataUtils {
 			throw new TypeError("parent must be of type string");
 		}
 		if (typeof children != "string") {
-			throw new TypeError("parent must be of type string");
+			throw new TypeError("child must be of type string");
 		}
 		let output = document.createElement(parent);
 		for (let entry of list) {

@@ -189,7 +189,14 @@ export default class TopList extends Processor {
 		return;
 	}
 
+	/**
+	 * Updates the button that sets up what the topWhatButton should show (whether to offer artists or songs)
+	 * @param {Element} button The button whose contents are to be updated
+	 * @throws {Error} if whatToGet has an unrecognized value
+	 * @throws {TypeError} If an invalid type is provided in the parameters
+	 */
 	updateTopWhatButton(button) {
+		if (!(button instanceof Element)) throw new TypeError("button needs to be of type Element");
 		if (this.#whatToGet == "track") {
 			button.innerText = "Auf Top Künstler Umschalten";
 		}
@@ -201,7 +208,14 @@ export default class TopList extends Processor {
 		}
 	}
 
+	/**
+	 * Same as [updateTopWhatButton]{@link TopList#updateTopWhatButton}, but for the whatUnitButton
+	 * @param {Element} button See [updateTopWhatButton]{@link TopList#updateTopWhatButton}
+	 * @throws {Erorr} See [updateTopWhatButton]{@link TopList#updateTopWhatButton}
+	 * @throws {TypeError} See [updateTopWhatButton]{@link TopList#updateTopWhatButton}
+	 */
 	updateUnitButton(button) {
+		if (!(button instanceof Element)) throw new TypeError("button needs to be of type Element");
 		if (this.unitToMeasure == "streams") {
 			button.innerText = "In Milisekunden anzeigen";
 		}
