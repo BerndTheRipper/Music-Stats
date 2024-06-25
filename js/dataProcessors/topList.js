@@ -6,7 +6,7 @@ import Processor from "./processor.js";
  * @hideconstructor
  * @classdesc Displays a list of the top n of either listened to artists or tracks by amount of streams within a given amount of time
  * @extends Processor
- * @todo maybe add toplist combined, and how big is the percentage the top list has
+ * @todo maybe add toplist combined
  * @todo add fuse against requesting more entries than there is data (might already have that?) check my 2022 data, if I really only listened to 26 unique artists after 01.01.2022. what exactly is the latest date here?
  * @todo make frontend input for listening time format
  * @todo doesn't it show 100 songs when I type in 100
@@ -20,6 +20,7 @@ export default class TopList extends Processor {
 	//Within the top #howMany, this list is sorted, after that it is not
 	#topList = [];
 	data = {};
+	sumOfAll = 0;
 
 
 	/**
@@ -45,6 +46,7 @@ export default class TopList extends Processor {
 
 	async drawChart() {
 		this.statsToShow = {};
+		this.sumOfAll = 0;
 		await this.readFiles();
 		this.cleanupData();
 		this.setUpChart();
@@ -97,6 +99,7 @@ export default class TopList extends Processor {
 				continue;
 			}
 			this.data[keyInDataObject] += valueToAdd;
+			this.sumOfAll += valueToAdd;
 		}
 	}
 
@@ -132,12 +135,16 @@ export default class TopList extends Processor {
 		let stringArray = [];
 		//TODO make this adapt to this.#howMany
 		let ol = this.dataDiv.querySelector("ol");
+		let sumOfShown = 0;
 		if (ol != null) {
 			this.dataDiv.removeChild(ol);
 		}
 		for (let [key, value] of Object.entries(this.statsToShow)) {
 			stringArray.push(key + ": " + value);
+			sumOfShown += value;
 		}
+
+		this.dataDiv.querySelector("#percentageElement").innerText = Math.round(sumOfShown / this.sumOfAll * 10000) / 100;
 		this.dataDiv.appendChild(DataUtils.arrayToElement(stringArray, "ol", "li"));
 	}
 
@@ -261,6 +268,15 @@ export default class TopList extends Processor {
 		output.updateUnitButton(whatUnitButton);
 		output.chartSpecificControlDiv.appendChild(topWhatButton);
 		output.chartSpecificControlDiv.appendChild(whatUnitButton);
+
+		let pElement = document.createElement("p");
+		pElement.innerText = "Diese Liste hat einen Anteil von ";
+		let percentageElement = document.createElement("span");
+		percentageElement.id = "percentageElement";
+		pElement.appendChild(percentageElement);
+		//TODO add for global timespan
+		pElement.innerHTML += "% an Deinen gesamtaktivitäten im gewählten Zeitraum.";
+		output.dataDiv.appendChild(pElement);
 
 		delete output.statsToShow.addData;
 		return output;
