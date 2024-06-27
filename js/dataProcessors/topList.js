@@ -9,7 +9,6 @@ import Processor from "./processor.js";
  * @todo maybe add toplist combined
  * @todo add fuse against requesting more entries than there is data (might already have that?) check my 2022 data, if I really only listened to 26 unique artists after 01.01.2022. what exactly is the latest date here?
  * @todo make frontend input for listening time format
- * @todo [figure out how the commit that came with this line fixed that issue] doesn't it show 100 songs when I type in 100
  */
 export default class TopList extends Processor {
 	//Possible values: album_artist, tracks
