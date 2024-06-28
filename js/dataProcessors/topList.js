@@ -115,8 +115,9 @@ export default class TopList extends Processor {
 					break;
 				}
 				if (values[i] <= this.data[this.#topList[k]]) continue;
-				this.#topList[this.#howMany - 1] = keys[i];
-				for (let j = this.#howMany - 1; j > k; j--) {
+				let upperLimit = Math.min(this.#howMany - 1, this.#topList.length);
+				this.#topList[upperLimit] = keys[i];
+				for (let j = upperLimit; j > k; j--) {
 					let temp = this.#topList[j - 1];
 					this.#topList[j - 1] = this.#topList[j];
 					this.#topList[j] = temp;
