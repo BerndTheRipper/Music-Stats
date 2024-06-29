@@ -90,11 +90,12 @@ export default class TopList extends Processor {
 			let valueToAdd = 1;
 
 			if (this.unitToMeasure == "ms") {
-				valueToAdd = entry["ms_played"]
+				valueToAdd = entry["ms_played"];
 			}
 
 			if (!this.data[keyInDataObject]) {
 				this.data[keyInDataObject] = valueToAdd;
+				this.sumOfAll += valueToAdd;
 				continue;
 			}
 			this.data[keyInDataObject] += valueToAdd;
