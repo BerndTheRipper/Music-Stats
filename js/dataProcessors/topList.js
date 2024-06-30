@@ -149,6 +149,16 @@ export default class TopList extends Processor {
 		this.dataDiv.appendChild(DataUtils.arrayToElement(stringArray, "ol", "li"));
 	}
 
+	clearChartConfig() {
+		super.clearChartConfig();
+		while (this.dataDiv.children.length > 0) {
+			this.dataDiv.removeChild(this.dataDiv.children[0]);
+		}
+		for (let child of this.dataDiv.children) {
+			this.dataDiv.removeChild(child);
+		}
+	}
+
 	//Currently only gets called for a new amount on the top list
 	eventHandler(e) {
 		if (e.type == "submit") {

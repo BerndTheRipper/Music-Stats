@@ -256,7 +256,6 @@ export default class Processor {
 		if (!(output.neededFolderHandle instanceof FileSystemDirectoryHandle)) {
 			throw new ReferenceError("Could not find the needed folder")
 		}
-		output.clearChartConfig();
 
 		if (showChart) {
 			chart.canvas.style.display = "block";

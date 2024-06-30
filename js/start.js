@@ -56,6 +56,9 @@ async function requestNewDiagram(e) {
 
 	let diagramClass = diagramClasses[e.target.value];
 
+	if (currentProcessor != null) {
+		currentProcessor.clearChartConfig();
+	}
 	currentProcessor = await diagramClass.createProcessor(currentChart, dataFolder);
 	await currentProcessor.drawChart();
 
