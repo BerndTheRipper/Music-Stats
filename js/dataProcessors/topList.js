@@ -20,6 +20,9 @@ export default class TopList extends Processor {
 	#topList = [];
 	data = {};
 	sumOfAll = 0;
+	callAmount = 0;
+	callAmountBeforeDateCheck = 0;
+	callAmountOnlyEntries = 0;
 
 
 	/**
@@ -32,9 +35,9 @@ export default class TopList extends Processor {
 
 	/**
 	 * Sets what to get, either top artists or tracks
-	 * @todo add validation
 	 */
 	set whatToGet(value) {
+		if (value != "streams" && value != "ms") throw new Error("Invalid value for whatToGet");
 		this.#whatToGet = value;
 	}
 
@@ -46,6 +49,9 @@ export default class TopList extends Processor {
 	async drawChart() {
 		this.statsToShow = {};
 		this.sumOfAll = 0;
+		this.callAmount = 0;
+		this.callAmountBeforeDateCheck = 0;
+		this.callAmountOnlyEntries = 0;
 		await this.readFiles();
 		this.cleanupData();
 		this.setUpChart();
@@ -70,6 +76,7 @@ export default class TopList extends Processor {
 		this.data = {};
 		let keyString = "master_metadata_" + this.whatToGet + "_name";
 		for (let entry of dataObject) {
+			this.callAmount += 1;
 			//If it's a podcast, it gets skipped for now
 			if (entry["spotify_episode_uri"] != null || entry["spotify_track_uri"] == null) {
 				continue;
@@ -79,7 +86,10 @@ export default class TopList extends Processor {
 				timestampToUse = entry["offline_timestamp"];
 			}
 
+			this.callAmountBeforeDateCheck += 1;
 			if (!this._dateWithinTimeframe(timestampToUse)) continue;
+
+			this.callAmountOnlyEntries += 1;
 
 			let keyInDataObject = entry[keyString];
 
@@ -110,9 +120,11 @@ export default class TopList extends Processor {
 		this.#topList[0] = keys[0];
 
 		for (let i = 1; i < keys.length; i++) {
+			let placed = false;
 			for (let k = 0; k < keys.length && k < this.#howMany; k++) {
 				if (this.#topList[k] == null) {
 					this.#topList[k] = keys[i];
+					placed = true;
 					break;
 				}
 				if (values[i] <= this.data[this.#topList[k]]) continue;
@@ -123,13 +135,20 @@ export default class TopList extends Processor {
 					this.#topList[j - 1] = this.#topList[j];
 					this.#topList[j] = temp;
 				}
+				placed = true;
 				break;
+			}
+			if (!placed) {
+				console.log;
 			}
 		}
 
+		let sum = 0;
 		for (let key of this.#topList) {
 			this.statsToShow[key] = this.data[key];
+			sum += this.data[key];
 		}
+		sum;
 	}
 
 	setUpChart() {
