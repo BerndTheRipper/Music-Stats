@@ -1,2 +1,4 @@
 myData
 .vscode
+node_modules
+out
