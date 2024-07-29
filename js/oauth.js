@@ -31,8 +31,17 @@ class Oauth {
 	}
 
 	static generateRandomString(length) {
-		//TODO write function
-		return "randomString";
+		let output = "";
+
+		let possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_.-~";
+		let array = new Uint8Array(length);
+
+		crypto.getRandomValues(array);
+		for (let value of array) {
+			output += possible[value % possible.length];
+		}
+
+		return output;
 	}
 
 	static generateHash(plainText) {
