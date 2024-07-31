@@ -53,6 +53,11 @@ class Oauth {
 
 	static base64Encode(input) {
 		//TODO write function
-		return "base64";
+		let output = window.btoa(input);
+		output = output.replace("=", "");
+		output = output.replace("+", "-");
+		output = output.replace("/", "_");
+
+		return output;
 	}
 }
