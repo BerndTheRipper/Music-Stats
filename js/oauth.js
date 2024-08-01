@@ -1,14 +1,20 @@
 class Oauth {
+	//Possible: PKCE, code
+	//Supported: PKCE
+	method = "PKCE";
 	authenticationURL;
 	clientID;
 	clientSecret;
 	redirectURL;
 	responseType;
 	scope;
+	state;
+
+	//PKCE stuff
+	//TODO make the hashing algorithm take into account this value, but make sure that it also stays compatible as a URL parameter
 	#codeChallengeMethod = "S256";
 	#randomString;
 	#codeChallenge;
-	state;
 
 	/**
 	 * 
@@ -29,6 +35,39 @@ class Oauth {
 			this.scope = "playlist-modify-public";
 			this.state = state;
 		}
+	}
+
+	login() {
+
+	}
+
+	displayLoginWindow() {
+
+	}
+
+	getSearchParams() {
+		let paramObject = {
+			clientID: this.clientID,
+			response_type: this.method,
+			redirect_uri: this.redirectURL,
+			state: this.state,
+			scope: this.scope
+		};
+
+		if (this.method == "PKCE") {
+			if (this.#randomString == null || this.#codeChallenge == null) throw new Error("If the method is set to PKCE, the challenge needs to have been generated before calling getSearchParams");
+
+			paramObject.code_challenge_method = this.#codeChallengeMethod;
+			paramObject.code_challenge = this.#codeChallenge;
+		}
+
+		return new URLSearchParams(paramObject);
+	}
+
+	async #generatePKCEChallenge(length = 64) {
+		this.#randomString = Oauth.generateRandomString(length);
+		let hashed = await Oauth.generateHash(this.#randomString);
+		this.#codeChallenge = Oauth.base64Encode(hashed);
 	}
 
 	static generateRandomString(length) {
@@ -52,7 +91,6 @@ class Oauth {
 	}
 
 	static base64Encode(input) {
-		//TODO write function
 		let output = window.btoa(input);
 		output = output.replace("=", "");
 		output = output.replace("+", "-");
