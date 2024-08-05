@@ -22,7 +22,7 @@ class Oauth {
 	constructor(appName = null, authenticationURL = null, clientID = null, clientSecret = null, redirectURL = null, state = null) {
 		this.#randomString = Oauth.generateRandomString(128);
 		//TODO figure out making this async, another createOauth thing? or making a function to set it to PKCE?
-		let hashed = Oauth.generateHash(randomString);
+		let hashed = Oauth.generateHash(this.#randomString);
 		this.#codeChallenge = Oauth.base64Encode(hashed);
 
 		if (appName == "spotify") {
