@@ -47,7 +47,7 @@ class Oauth {
 
 	getSearchParams() {
 		let paramObject = {
-			clientID: this.clientID,
+			client_id: this.clientID,
 			response_type: this.method,
 			redirect_uri: this.redirectURL,
 			state: this.state,
@@ -57,6 +57,7 @@ class Oauth {
 		if (this.method == "PKCE") {
 			if (this.#randomString == null || this.#codeChallenge == null) throw new Error("If the method is set to PKCE, the challenge needs to have been generated before calling getSearchParams");
 
+			paramObject.response_type = "code";
 			paramObject.code_challenge_method = this.#codeChallengeMethod;
 			paramObject.code_challenge = this.#codeChallenge;
 		}
