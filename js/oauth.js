@@ -28,7 +28,7 @@ class Oauth {
 		if (appName == "spotify") {
 			//TODO make this a prefab that only gets iterated through
 			this.authenticationURL = "https://accounts.spotify.com/authorize";
-			this.clientID = "TBD";
+			this.clientID = "455c1cdb754d46a8885da85ee59af2af";
 			this.redirectURL = location.origin + "/oAuthCallback";
 			this.responseType = "code";
 			//TODO check if this scope allows the creation of a private playlist
@@ -92,7 +92,7 @@ class Oauth {
 	}
 
 	static base64Encode(input) {
-		let output = window.btoa(String.fromCharCode(...new Uint8Array(hashed)));
+		let output = window.btoa(String.fromCharCode(...new Uint8Array(input)));
 		output = output.replace("=", "");
 		output = output.replace("+", "-");
 		output = output.replace("/", "_");
