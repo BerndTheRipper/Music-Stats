@@ -93,9 +93,9 @@ class Oauth {
 
 	static base64Encode(input) {
 		let output = window.btoa(String.fromCharCode(...new Uint8Array(input)));
-		output = output.replace("=", "");
-		output = output.replace("+", "-");
-		output = output.replace("/", "_");
+		output = output.replaceAll("=", "");
+		output = output.replaceAll("+", "-");
+		output = output.replaceAll("/", "_");
 
 		return output;
 	}
